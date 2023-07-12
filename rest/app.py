@@ -1,23 +1,17 @@
+import os
 from flask import Flask
 from flask_smorest import Api
 from flask_migrate import Migrate
 
+from db import db
 import models
 
-from db import db
 from resources.item import blp as ItemBlueprint
 from resources.store import blp as StoreBlueprint
+from resources.tag import blp as TagBlueprint
 
-#from db import db
-#from schemas import ItemSchema, ItemUpdateSchema
-import os
-#from flask import Flask
-#from flask_smorest import Api
-#
-#import models
-#
-#from resources.item import blp as ItemBlueprint
-#from resources.store import blp as StoreBlueprint
+
+
 
 # Factory Pattern
 
@@ -36,14 +30,14 @@ def create_app(db_url=None):
         "DATABASE_URL", "sqlite:///data.db")
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     db.init_app(app)
-
     api = Api(app)
-
-    #@app.before_first_request
-    #def create_tables():
-    #    db.create_all()
+    
+    with app.app_context():
+            db.create_all()
 
     api.register_blueprint(StoreBlueprint)
     api.register_blueprint(ItemBlueprint)
+    api.register_blueprint(TagBlueprint)
+
 
     return app
