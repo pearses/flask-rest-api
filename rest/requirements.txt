@@ -5,3 +5,4 @@ passlib
 marshmallow
 python-dotenv
 gunicorn
+passlib
